@@ -15,6 +15,7 @@ Tài liệu này ghi lại thiết lập và kết quả thử chạy Python tr�
 
 - `telegram_test.py`: script gửi tối đa 10 tin, cách nhau 180 giây theo mặc định; đồng thời thăm dò Telegram để nhận `/stop` trong thời gian chờ.
 - `~/.config/telegram/config.json`: cấu hình bot dùng chung trong vùng riêng của Termux. Các script Telegram khác có thể dùng chung file này.
+- `market_price_bot/`: ứng dụng riêng lấy giá vàng/Bitcoin mỗi 5 phút, lưu lịch sử SQLite và trả lời `/gold-price`, `/bitcoin-price`. Xem [README của dự án](market_price_bot/README.md) để cài đặt và vận hành.
 
 Script dùng thư viện chuẩn Python (`urllib`), không cần cài thêm package. Python 3.14.6 đã được xác nhận hoạt động trong Termux.
 
@@ -162,10 +163,17 @@ Nếu cần tăng độ ổn định trên Samsung, kiểm tra mục quản lý 
 - `/stop` được nhận; sau đó ADB không còn thấy tiến trình Python.
 - Script hiện đã được cập nhật để chỉ nhận `/stop` và lưu cấu hình dùng chung dưới `~/.config/telegram/config.json`.
 
+## Tiến độ ứng dụng giá
+
+- `market_price_bot/` đã được tạo, kiểm thử offline và chép sang `~/storage/downloads/market_price_bot` trên Termux.
+- Ngày 2026-09-27, chạy `python -m market_price_bot` từ `~/storage/downloads`. Log Termux xác nhận đã lưu mẫu XAU và Bitcoin vào SQLite; bot khởi động thành công và người dùng xác nhận nhận được giá qua Telegram.
+- 13 kiểm thử `unittest` chạy thành công trên máy phát triển, gồm ghi/đọc/mở lại SQLite, xử lý lệnh, xác thực người gửi và cô lập lỗi nguồn.
+- Chưa xác minh trên điện thoại: nhiều chu kỳ 5 phút, tiếp tục khi khóa màn hình, dữ liệu còn sau khi dừng/khởi động lại, và `/stop`/từ chối người gửi không được phép trong phiên chạy thực tế.
+
 ## Giới hạn và lưu ý API
 
 - Telegram Bot API sử dụng `getUpdates` cho polling. Mỗi bot chỉ nên có một consumer polling đang hoạt động; tắt bot PC trong khi script Android nhận update. Nếu bật hai consumer cùng lúc, chúng có thể tranh nhau lấy update hoặc gặp lỗi xung đột.
-- `/test` và `/task` chưa được triển khai. Không gửi lệnh shell tùy ý từ Telegram. Bước tiếp theo nên làm `/test` trả trạng thái, sau đó `/task` chạy một tác vụ giả lập ngắn, có allowlist, giới hạn thời gian và kiểm tra quyền admin.
+- Ứng dụng giá hiện hỗ trợ `/gold-price`, `/bitcoin-price` và `/stop`; `/test` và `/task` chưa được triển khai. Không gửi lệnh shell tùy ý từ Telegram. Nếu bổ sung tác vụ sau này, cần allowlist, giới hạn thời gian và kiểm tra quyền admin.
 - Chỉ khi mô hình nhận lệnh được kiểm tra an toàn mới nối với tác vụ thật.
 - Có thể gọi API bên thứ ba (ví dụ Binance) bằng HTTPS từ Termux. Bắt đầu bằng endpoint dữ liệu công khai hoặc testnet; không bật giao dịch thật hay quyền rút tiền trong thử nghiệm nền này.
 - Script kiểm tra khả năng chạy tác vụ, không tự chứng minh Android tiết kiệm điện hơn PC. Muốn kết luận điện năng cần phép đo riêng; USB dùng cho ADB cũng thường cấp nguồn cho điện thoại.
