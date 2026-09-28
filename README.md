@@ -16,6 +16,7 @@ Tài liệu này ghi lại thiết lập và kết quả thử chạy Python tr�
 - `telegram_test.py`: script gửi tối đa 10 tin, cách nhau 180 giây theo mặc định; đồng thời thăm dò Telegram để nhận `/stop` trong thời gian chờ.
 - `~/.config/telegram/config.json`: cấu hình bot dùng chung trong vùng riêng của Termux. Các script Telegram khác có thể dùng chung file này.
 - `market_price_bot/`: ứng dụng riêng lấy giá vàng/Bitcoin mỗi 5 phút, lưu lịch sử SQLite và trả lời `/gold-price`, `/bitcoin-price`. Xem [README của dự án](market_price_bot/README.md) để cài đặt và vận hành.
+- `camera_bot/`: bot Telegram Python cho Termux, chụp ảnh bằng `/photo-front` hoặc `/photo-back` (lệnh `/photo` giữ camera sau) và dừng bằng `/stop`. Quay video chưa được hỗ trợ do Termux:API hiện không có lệnh ghi video. Xem [README của dự án](camera_bot/README.md).
 
 Script dùng thư viện chuẩn Python (`urllib`), không cần cài thêm package. Python 3.14.6 đã được xác nhận hoạt động trong Termux.
 
